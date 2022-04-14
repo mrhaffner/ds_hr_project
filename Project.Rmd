@@ -22,7 +22,7 @@ t.test(Avg_Heart_Rate~Exercise_Type, data=DS_Project, alternative='less', paired
 DS_Project %>%
   group_by(Exercise_Type) %>%
   summarize(aveAvg_Heart_Rate = mean(Avg_Heart_Rate), seAvg_Heart_Rate = sd(Avg_Heart_Rate)/sqrt(length(Avg_Heart_Rate)), tstar = qt(1-0.05/2, length(Avg_Heart_Rate)-1)) %>%
-  ggplot(aes(x=Exercise_Type, y=aveAvg_Heart_Rate))+geom_point()+geom_errorbar(aes(ymin=aveAvg_Heart_Rate - seAvg_Heart_Rate*tstar, ymax=aveAvg_Heart_Rate + seAvg_Heart_Rate*tstar))+ylim(c(0,170))
+  ggplot(aes(x=Exercise_Type, y=aveAvg_Heart_Rate))+geom_point()+geom_errorbar(aes(ymin=aveAvg_Heart_Rate - seAvg_Heart_Rate*tstar, ymax=aveAvg_Heart_Rate + seAvg_Heart_Rate*tstar))+ylim(c(0,170))+labs(title='Average Across Sessions of Average Heart Rate for BJJ vs VR Boxing', y='Average of Average Heart Rate (BPM)', x='Exercise Type')
 # make better labels
 ```
 
@@ -33,12 +33,3 @@ library(tidyverse)
 
 ggplot(data=DS_Project, aes(x=Session_Number, y=Avg_Heart_Rate, color=Exercise_Type))+geom_point()+ylim(c(0,170))+scale_x_discrete(limits=c(1,2,3,4,5,6))+labs(title='Average Heart Rate by Session for BJJ vs VR Boxing', y='Average Heart Rate (BPM)', x='Session Number')
 ```
-
-# Average across sessions
-```{r}
-DS_Project %>%
-  group_by(Exercise_Type) %>%
-  summarize(Avg_Avg_Heart_Rate=mean(Avg_Heart_Rate)) %>%
-  ggplot(aes(y=Avg_Avg_Heart_Rate, x=Exercise_Type))+geom_col()+labs(title='Average of Average Heart Rate for BJJ vs VR Boxing', y='Average of Average Heart Rate (BPM)', x='Exercise Type')
-```
-
