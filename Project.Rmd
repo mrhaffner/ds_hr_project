@@ -22,8 +22,7 @@ t.test(Avg_Heart_Rate~Exercise_Type, data=DS_Project, alternative='less', paired
 DS_Project %>%
   group_by(Exercise_Type) %>%
   summarize(aveAvg_Heart_Rate = mean(Avg_Heart_Rate), seAvg_Heart_Rate = sd(Avg_Heart_Rate)/sqrt(length(Avg_Heart_Rate)), tstar = qt(1-0.05/2, length(Avg_Heart_Rate)-1)) %>%
-  ggplot(aes(x=Exercise_Type, y=aveAvg_Heart_Rate))+geom_point()+geom_errorbar(aes(ymin=aveAvg_Heart_Rate - seAvg_Heart_Rate*tstar, ymax=aveAvg_Heart_Rate + seAvg_Heart_Rate*tstar))+ylim(c(0,170))+labs(title='Average Across Sessions of Average Heart Rate for BJJ vs VR Boxing', y='Average of Average Heart Rate (BPM)', x='Exercise Type')
-# make better labels
+  ggplot(aes(x=Exercise_Type, y=aveAvg_Heart_Rate))+geom_point(color='blue')+geom_errorbar(aes(ymin=aveAvg_Heart_Rate - seAvg_Heart_Rate*tstar, ymax=aveAvg_Heart_Rate + seAvg_Heart_Rate*tstar), color='blue')+ylim(c(0,170))+labs(title='Average Across Sessions of Average Heart Rate for BJJ vs VR Boxing', y='Average of Average Heart Rate (BPM)', x='Exercise Type')
 ```
 
 # Bar plot of all days
