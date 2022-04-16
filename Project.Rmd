@@ -10,25 +10,83 @@ output: word_document
 # H0: µ_bjj = µ_boxing
 # HA: µ_bjj < µ_boxing
 
-t.test(Avg_Heart_Rate~Exercise_Type, data=DS_Project, alternative='less', paired=TRUE)
+t.test(Avg_Heart_Rate~Exercise_Type, data=hr_data, alternative='less', paired=TRUE)
 
-# ?? null hypothesis
-# There is ??? sufficient evidence to support the claim that the average velocity from the wetsuit is 
-# significantly higher than the average velocity from the regular suit
+# Fail to reject the null hypothesis
+# There is not sufficient evidence to support the claim that the average heart rate of a BJJ workout is less than a VR boxing workout for the author
 ```
 
-
-```{r}
-DS_Project %>%
-  group_by(Exercise_Type) %>%
-  summarize(aveAvg_Heart_Rate = mean(Avg_Heart_Rate), seAvg_Heart_Rate = sd(Avg_Heart_Rate)/sqrt(length(Avg_Heart_Rate)), tstar = qt(1-0.05/2, length(Avg_Heart_Rate)-1)) %>%
-  ggplot(aes(x=Exercise_Type, y=aveAvg_Heart_Rate))+geom_point(color='blue')+geom_errorbar(aes(ymin=aveAvg_Heart_Rate - seAvg_Heart_Rate*tstar, ymax=aveAvg_Heart_Rate + seAvg_Heart_Rate*tstar), color='blue')+ylim(c(0,170))+labs(title='Average Across Sessions of Average Heart Rate for BJJ vs VR Boxing', y='Average of Average Heart Rate (BPM)', x='Exercise Type')
-```
-
-# Bar plot of all days
+# Point plot of all days
 ```{r}
 library(ggplot2)
 library(tidyverse)
 
-ggplot(data=DS_Project, aes(x=Session_Number, y=Avg_Heart_Rate, color=Exercise_Type))+geom_point()+ylim(c(0,170))+scale_x_discrete(limits=c(1,2,3,4,5,6))+labs(title='Average Heart Rate by Session for BJJ vs VR Boxing', y='Average Heart Rate (BPM)', x='Session Number')
+ggplot(data=hr_data, aes(x=Session_Number, y=Avg_Heart_Rate, color=Exercise_Type))+geom_point()+ylim(c(0,170))+scale_x_discrete(limits=c(1,2,3,4,5,6,7))+labs(title='Average Heart Rate by Session for BJJ vs VR Boxing', y='Average Heart Rate (BPM)', x='Session Number')+theme_minimal()
+
+ggsave('data_graph.png')
 ```
+
+# Graph of average of average heart rate
+```{r}
+blue<-'#0072B2'
+
+DS_Project %>%
+  group_by(Exercise_Type) %>%
+  summarize(aveAvg_Heart_Rate = mean(Avg_Heart_Rate), seAvg_Heart_Rate = sd(Avg_Heart_Rate)/sqrt(length(Avg_Heart_Rate)), tstar = qt(1-0.05/2, length(Avg_Heart_Rate)-1)) %>%
+  ggplot(aes(x=Exercise_Type, y=aveAvg_Heart_Rate))+geom_point(color=blue)+geom_errorbar(aes(ymin=aveAvg_Heart_Rate - seAvg_Heart_Rate*tstar, ymax=aveAvg_Heart_Rate + seAvg_Heart_Rate*tstar), color=blue)+ylim(c(0,170))+labs(title='Average Across Sessions of Average Heart Rate for BJJ vs VR Boxing', y='Average of Average Heart Rate (BPM)', x='Exercise Type')+theme_minimal()
+
+ggsave('average_graph.png')
+```
+
+# Boxplot of hr data
+```{r}
+ggplot(data=hr_data, aes(y=Avg_Heart_Rate, x=Exercise_Type))+geom_boxplot(color=blue)+labs(title='Boxplots of Average Heart Rate by Exercise Type', x='Exercise Type', y='Average Heart Rate (BPM)')+theme_minimal()
+
+ggsave('boxplots.png')
+```
+# Boxplot of Duration
+```{r}
+#convert to int
+hr_data %>%
+  mutate(Duration_Min=Duration / 60) %>%
+  ggplot(aes(y=Duration_Min, x=Exercise_Type))+geom_boxplot(color=blue)+labs(title='Boxplots of Exercise Duration by Exercise Type', x='Exercise Type', y='Exercise Duration (minutes)')+theme_minimal()
+
+ggsave('boxplots_duration.png')
+```
+# Exploring relationship between average heart rate and exercise duration
+```{r}
+hr_data %>%
+  mutate(Duration_Min=Duration / 60) %>%
+  ggplot(aes(x=Duration_Min, y=Avg_Heart_Rate))+geom_point()+geom_smooth(method='lm', se=FALSE)+theme_minimal()
+```
+# Correlation between Avg HR and Duration (both exercise types)
+```{r}
+hr_model<-lm(Avg_Heart_Rate~Duration, data=hr_data)
+summary(hr_model)
+
+cor.test(hr_data$Duration, hr_data$Avg_Heart_Rate, method='pearson')
+```
+
+# Correlation between Avg HR and Duration (BJJ only)
+```{r}
+
+hr_data_bjj<-hr_data %>%
+  filter(Exercise_Type == 'BJJ')
+
+hr_data_bjj
+hr_model_bjj<-lm(Avg_Heart_Rate~Duration, data=hr_data_bjj)
+summary(hr_model_bjj)
+
+cor.test(hr_data_bjj$Duration, hr_data_bjj$Avg_Heart_Rate, method='pearson')
+```
+
+# Correlation between Avg HR and Duration (vr boxing only)
+```{r}
+hr_data_box<-hr_data %>%
+  filter(Exercise_Type == 'VR Boxing')
+
+hr_data_box
+hr_model_box<-lm(Avg_Heart_Rate~Duration, data=hr_data_box)
+summary(hr_model_box)
+```
+
