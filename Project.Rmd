@@ -23,7 +23,7 @@ library(tidyverse)
 
 ggplot(data=hr_data, aes(x=Session_Number, y=Avg_Heart_Rate, color=Exercise_Type))+geom_point()+ylim(c(0,170))+scale_x_discrete(limits=c(1,2,3,4,5,6,7))+labs(title='Average Heart Rate by Session for BJJ vs VR Boxing', y='Average Heart Rate (BPM)', x='Session Number')+theme_minimal()
 
-ggsave('data_graph.png')
+ggsave('graphs/data_graph.png')
 ```
 
 # Graph of average of average heart rate
@@ -35,14 +35,14 @@ DS_Project %>%
   summarize(aveAvg_Heart_Rate = mean(Avg_Heart_Rate), seAvg_Heart_Rate = sd(Avg_Heart_Rate)/sqrt(length(Avg_Heart_Rate)), tstar = qt(1-0.05/2, length(Avg_Heart_Rate)-1)) %>%
   ggplot(aes(x=Exercise_Type, y=aveAvg_Heart_Rate))+geom_point(color=blue)+geom_errorbar(aes(ymin=aveAvg_Heart_Rate - seAvg_Heart_Rate*tstar, ymax=aveAvg_Heart_Rate + seAvg_Heart_Rate*tstar), color=blue)+ylim(c(0,170))+labs(title='Average Across Sessions of Average Heart Rate for BJJ vs VR Boxing', y='Average of Average Heart Rate (BPM)', x='Exercise Type')+theme_minimal()
 
-ggsave('average_graph.png')
+ggsave('graphs/average_graph.png')
 ```
 
 # Boxplot of hr data
 ```{r}
 ggplot(data=hr_data, aes(y=Avg_Heart_Rate, x=Exercise_Type))+geom_boxplot(color=blue)+labs(title='Boxplots of Average Heart Rate by Exercise Type', x='Exercise Type', y='Average Heart Rate (BPM)')+theme_minimal()
 
-ggsave('boxplots.png')
+ggsave('graphs/boxplots.png')
 ```
 # Boxplot of Duration
 ```{r}
@@ -51,7 +51,7 @@ hr_data %>%
   mutate(Duration_Min=Duration / 60) %>%
   ggplot(aes(y=Duration_Min, x=Exercise_Type))+geom_boxplot(color=blue)+labs(title='Boxplots of Exercise Duration by Exercise Type', x='Exercise Type', y='Exercise Duration (minutes)')+theme_minimal()
 
-ggsave('boxplots_duration.png')
+ggsave('graphs/boxplots_duration.png')
 ```
 # Exploring relationship between average heart rate and exercise duration
 ```{r}
