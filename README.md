@@ -2,7 +2,7 @@
 
 Matt Haffner\
 Metropolitan State University\
-DATA 211 - Data Science & Visualization\
+DATA 211 - Data Science & Visualization
 
 ## Abstract
 
