@@ -1,8 +1,8 @@
 # Comparing Average Heart Rate Between Author’s VR Boxing and Brazilian Jiu-Jitsu Workouts
 
-- Matt Haffner
-- Metropolitan State University
-- DATA 211 - Data Science & Visualization
+Matt Haffner\
+Metropolitan State University\
+DATA 211 - Data Science & Visualization\
 
 ## Abstract
 
